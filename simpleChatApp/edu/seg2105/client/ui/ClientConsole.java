@@ -22,6 +22,8 @@ import edu.seg2105.client.common.*;
 public class ClientConsole implements ChatIF {
   // Class variables *************************************************
 
+  private String clientLoginId;
+
   /**
    * The default port to connect on.
    */
@@ -47,9 +49,13 @@ public class ClientConsole implements ChatIF {
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port) {
+  public ClientConsole(String clientLoginId, String host, int port) {
+
+    // Set the login id for the client
+    this.clientLoginId = clientLoginId;
+
     try {
-      client = new ChatClient(host, port, this);
+      client = new ChatClient(clientLoginId, host, port, this);
 
     } catch (IOException exception) {
       System.out.println("Error: Can't setup connection!"
@@ -221,21 +227,32 @@ public class ClientConsole implements ChatIF {
   /**
    * This method is responsible for the creation of the Client UI.
    *
-   * @param args[0] The host to connect to.
+   * @param args[0] The client's login id
+   * @param args[1] The host to connect to.
+   * @param args[2] The port to connect to
    */
   public static void main(String[] args) {
+
+    // Tells user they have to set a login id
+    if (args.length < 1) {
+      System.out.println("All clients must set a login_id = args[0] (optional: host = args[1], port = args[2])");
+      System.exit(1);
+    }
+
+    String clientLoginId = args[0];
     String host = "";
     int port = 0;
 
     try {
-      host = args[0];
+      host = args[1];
+      port = Integer.parseInt(args[2]);
 
     } catch (ArrayIndexOutOfBoundsException e) {
       host = "localhost";
       port = DEFAULT_PORT;
     }
 
-    ClientConsole chat = new ClientConsole(host, DEFAULT_PORT);
+    ClientConsole chat = new ClientConsole(clientLoginId, host, DEFAULT_PORT);
     chat.accept(); // Wait for console data
   }
 }

@@ -1,0 +1,2 @@
+HOW TO RUN CLIENT CONSOLE WITH ARGS[0] = KYLE
+/usr/bin/env /Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home/bin/java @/var/folders/5c/k6wr81n57dx29j0szsn1ytpc0000gn/T/cp_4um6wbvqayei83hio3ckepjhr.argfile edu.seg2105.client.ui.ClientConsole KYLE

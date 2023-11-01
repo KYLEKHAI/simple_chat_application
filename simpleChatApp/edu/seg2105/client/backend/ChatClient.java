@@ -20,6 +20,7 @@ import edu.seg2105.client.common.*;
  */
 public class ChatClient extends AbstractClient {
   // Instance variables **********************************************
+  private String clientLoginId;
 
   /**
    * The interface type variable. It allows the implementation of
@@ -37,10 +38,13 @@ public class ChatClient extends AbstractClient {
    * @param clientUI The interface type variable.
    */
 
-  public ChatClient(String host, int port, ChatIF clientUI)
+  public ChatClient(String clientLoginId, String host, int port, ChatIF clientUI)
       throws IOException {
     super(host, port); // Call the superclass constructor
     this.clientUI = clientUI;
+
+    // Set client login id
+    this.clientLoginId = clientLoginId;
     openConnection();
   }
 
