@@ -30,7 +30,7 @@ public class ConnectionToClient extends Thread {
 	/**
 	 * A reference to the Server that created this instance.
 	 */
-	private AbstractServer		server;
+	private AbstractServer server;
 
 	/**
 	 * Sockets are used in the operating system as channels of communication
@@ -38,23 +38,23 @@ public class ConnectionToClient extends Thread {
 	 * 
 	 * @see java.net.Socket
 	 */
-	private Socket				clientSocket;
+	private Socket clientSocket;
 
 	/**
 	 * Stream used to read from the client.
 	 */
-	private ObjectInputStream	input;
+	private ObjectInputStream input;
 
 	/**
 	 * Stream used to write to the client.
 	 */
-	private ObjectOutputStream	output;
+	private ObjectOutputStream output;
 
 	/**
 	 * Indicates if the thread is ready to stop. Set to true when closing of the
 	 * connection is initiated.
 	 */
-	private boolean				readyToStop;
+	private boolean readyToStop;
 
 	/**
 	 * Map to save information about the client such as its login ID. The
@@ -62,7 +62,7 @@ public class ConnectionToClient extends Thread {
 	 * servers will want to store many different types of information about each
 	 * client. Used by the setInfo and getInfo methods.
 	 */
-	private HashMap				savedInfo	= new HashMap(10);
+	private HashMap savedInfo = new HashMap(10);
 
 	// CONSTRUCTORS *****************************************************
 
@@ -70,14 +70,14 @@ public class ConnectionToClient extends Thread {
 	 * Constructs a new connection to a client.
 	 * 
 	 * @param group
-	 *            the thread groupSystem.out.println("Client at "+ client +
-	 *            "connected"); that contains the connections.
+	 *                     the thread groupSystem.out.println("Client at "+ client +
+	 *                     "connected"); that contains the connections.
 	 * @param clientSocket
-	 *            contains the client's socket.
+	 *                     contains the client's socket.
 	 * @param server
-	 *            a reference to the server that created this instance
+	 *                     a reference to the server that created this instance
 	 * @exception IOException
-	 *                if an I/O error occur when creating the connection.
+	 *                        if an I/O error occur when creating the connection.
 	 */
 	ConnectionToClient(ThreadGroup group, Socket clientSocket, AbstractServer server) throws IOException {
 		super(group, (Runnable) null);
@@ -112,7 +112,7 @@ public class ConnectionToClient extends Thread {
 	 * @param msg
 	 *            the message to be sent.
 	 * @exception IOException
-	 *                if an I/O error occur when sending the message.
+	 *                        if an I/O error occur when sending the message.
 	 */
 	final public void sendToClient(Object msg) throws IOException {
 		if (clientSocket == null || output == null)
@@ -124,10 +124,11 @@ public class ConnectionToClient extends Thread {
 	/**
 	 * Reset the output stream so we can use the same
 	 * buffer repeatedly. This would not normally be used, but is necessary
-    * in some circumstances when Java refuses to send data that it thinks has been sent.
+	 * in some circumstances when Java refuses to send data that it thinks has been
+	 * sent.
 	 */
 	final public void forceResetAfterSend() throws IOException {
-      output.reset();
+		output.reset();
 	}
 
 	/**
@@ -135,7 +136,7 @@ public class ConnectionToClient extends Thread {
 	 * effect.
 	 * 
 	 * @exception IOException
-	 *                if an error occurs when closing the socket.
+	 *                        if an error occurs when closing the socket.
 	 */
 	final public void close() throws IOException {
 		readyToStop = true; // Set the flag that tells the thread to stop
@@ -164,8 +165,9 @@ public class ConnectionToClient extends Thread {
 	 * @return the client's description.
 	 */
 	public String toString() {
-		return clientSocket == null ? null : clientSocket.getInetAddress().getHostName() + " ("
-				+ clientSocket.getInetAddress().getHostAddress() + ")";
+		return clientSocket == null ? null
+				: clientSocket.getInetAddress().getHostName() + " ("
+						+ clientSocket.getInetAddress().getHostAddress() + ")";
 	}
 
 	/**
@@ -173,9 +175,9 @@ public class ConnectionToClient extends Thread {
 	 * concrete subclasses of AbstractServer. Based on a hash map.
 	 * 
 	 * @param infoType
-	 *            identifies the type of information
+	 *                 identifies the type of information
 	 * @param info
-	 *            the information itself.
+	 *                 the information itself.
 	 */
 	public void setInfo(String infoType, Object info) {
 		savedInfo.put(infoType, info);
@@ -186,7 +188,7 @@ public class ConnectionToClient extends Thread {
 	 * map.
 	 * 
 	 * @param infoType
-	 *            identifies the type of information
+	 *                 identifies the type of information
 	 */
 	public Object getInfo(String infoType) {
 		return savedInfo.get(infoType);
@@ -231,7 +233,7 @@ public class ConnectionToClient extends Thread {
 	 * Closes all connection to the server.
 	 * 
 	 * @exception IOException
-	 *                if an I/O error occur when closing the connection.
+	 *                        if an I/O error occur when closing the connection.
 	 */
 	private void closeAll() throws IOException {
 		try {
