@@ -5,6 +5,7 @@ package edu.seg2105.edu.server.backend;
 // license found at www.lloseng.com 
 
 import ocsf.server.*;
+import java.io.IOException;
 
 // Importing oscf classes
 import ocsf.server.ConnectionToClient;
@@ -107,7 +108,7 @@ public class EchoServer extends AbstractServer {
    */
   @Override
   protected void clientConnected(ConnectionToClient client) {
-    System.out.println(client + " is successfully connected");
+    System.out.println("Client is successfully connected");
   }
 
   /**
@@ -120,10 +121,32 @@ public class EchoServer extends AbstractServer {
   @Override
   synchronized protected void clientDisconnected(
       ConnectionToClient client) {
-    System.out.println(client + " is successfully disconnected");
+    System.out.println("Client is successfully disconnected");
   }
 
   public void setServerConsole(ServerConsole serverConsole) {
+  }
+
+  // Disconnects all existing clients
+  public void disconnectAllClients() {
+
+    // Iterate through all the clients connected in the thread list
+    Thread[] clientThreadList = getClientConnections();
+
+    // For each connected client, disconnect each of them
+    for (Thread clientThread : clientThreadList) {
+      if (clientThread instanceof ConnectionToClient) {
+
+        ConnectionToClient client = (ConnectionToClient) clientThread;
+
+        try {
+          client.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+
+      }
+    }
   }
 }
 // End of EchoServer class

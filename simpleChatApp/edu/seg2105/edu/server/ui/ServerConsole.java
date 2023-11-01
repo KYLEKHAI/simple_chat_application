@@ -42,8 +42,72 @@ public class ServerConsole implements ChatIF {
         }
     }
 
+    // Handle server commands
     private void handleServerCommand(String command) {
-        // 2c) implementation
+
+        // Handle quit command
+        if (command.startsWith("#quit")) {
+            display("Server will quit");
+            server.sendToAllClients("SERVER MSG> Server is quitting");
+            server.stopListening();
+            System.exit(0);
+
+            // Handle stop command
+        } else if (command.startsWith("#stop")) {
+            display("Server will stop listening for new clients");
+            server.sendToAllClients("SERVER MSG> Server will stop listening for new clients");
+            server.stopListening();
+
+            // Handle close command
+        } else if (command.startsWith("#close")) {
+            display("Server will close. All clients will be disconnected");
+            server.sendToAllClients("SERVER MSG> Server will close. All clients will be disconnected");
+            server.stopListening();
+            server.disconnectAllClients();
+
+            // Handle setport command
+        } else if (command.startsWith("#setport")) {
+
+            if (!server.isListening()) {
+                String[] cLine = command.split(" ");
+
+                if (cLine.length == 2) {
+
+                    int newPort = Integer.parseInt(cLine[1]);
+                    server.setPort(newPort);
+                    display("Server is setting new port to: " + newPort);
+
+                } else {
+                    display("Invalid syntax. Please use #setport <port>");
+                }
+            } else {
+                display("Server is required to stop before setting new port");
+            }
+
+            // Handle start command
+        } else if (command.startsWith("#start")) {
+
+            if (!server.isListening()) {
+
+                try {
+                    server.listen();
+
+                    display("Server will now listen for new clients");
+                    server.sendToAllClients("SERVER MSG> Server will now listen for new clients");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                display("Server must be stopped before listening for new clients");
+            }
+
+            // Handle getport command
+        } else if (command.startsWith("#getport")) {
+            display("Current server port: " + server.getPort());
+
+        } else {
+            display("Invalid command: " + command);
+        }
 
     }
 
