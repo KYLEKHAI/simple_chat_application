@@ -57,6 +57,9 @@ public class ClientConsole implements ChatIF {
     try {
       client = new ChatClient(clientLoginId, host, port, this);
 
+      // Show client has logged in using the clientLoginId
+      client.handleMessageFromClientUI("#login " + clientLoginId);
+
     } catch (IOException exception) {
       System.out.println("Error: Can't setup connection!"
           + " Terminating client.");
