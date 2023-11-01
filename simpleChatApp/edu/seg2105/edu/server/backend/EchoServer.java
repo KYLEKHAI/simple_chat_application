@@ -10,6 +10,9 @@ import ocsf.server.*;
 import ocsf.server.ConnectionToClient;
 import ocsf.server.AbstractServer;
 
+// Importing new ServerConsole class
+import edu.seg2105.edu.server.ui.ServerConsole;
+
 /**
  * This class overrides some of the methods in the abstract
  * superclass in order to give more functionality to the server.
@@ -118,6 +121,9 @@ public class EchoServer extends AbstractServer {
   synchronized protected void clientDisconnected(
       ConnectionToClient client) {
     System.out.println(client + " is successfully disconnected");
+  }
+
+  public void setServerConsole(ServerConsole serverConsole) {
   }
 }
 // End of EchoServer class
