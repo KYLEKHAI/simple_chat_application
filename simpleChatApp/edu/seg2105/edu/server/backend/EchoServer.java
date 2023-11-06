@@ -119,16 +119,13 @@ public class EchoServer extends AbstractServer {
 
     try {
       if (args.length > 0) {
-        System.out.println("IF STATEMENT");
         port = Integer.parseInt(args[0]); // Get port from command line
 
       } else {
         port = DEFAULT_PORT; // Set port to 5555
-        System.out.println("ELSE STATEMENT");
       }
 
     } catch (Throwable t) {
-      System.out.println("CATCH STATEMENT");
       port = DEFAULT_PORT; // Set port to 5555
     }
 

@@ -184,9 +184,6 @@ public class ClientConsole implements ChatIF {
         System.out.println("Error. Please log off before setting a new port");
       }
 
-      // ERROR TO BE FIXED: LOGIN DOESNT ALLOW FOR RE-LOGGIN IN WITH NEW HOST/PORT
-      // (also use getInet() to validate)
-
     } else if (command.startsWith("#login")) {
       // Handle login command
       System.out.println(clientLoginId + " requested to log in");
