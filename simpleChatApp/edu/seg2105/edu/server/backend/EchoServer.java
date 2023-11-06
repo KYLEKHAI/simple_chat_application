@@ -52,9 +52,41 @@ public class EchoServer extends AbstractServer {
    */
   public void handleMessageFromClient(Object msg, ConnectionToClient client) {
 
-    System.out.println("Message received: " + msg + " from " + client);
-
     this.sendToAllClients(msg);
+
+    // Make message into string
+    String message = msg.toString(); // Convert the message to a string
+
+    // If message starts with #login then call the loginClientMessage method
+    if (message.startsWith("#login")) {
+      loginClientMessage(message, client);
+
+    } else {
+      // Other processing for regular messages
+      System.out.println("Message received: " + message + " from " + client.getInfo("clientLoginId"));
+
+      // Sending to all the clients on the same server
+      this.sendToAllClients(client.getInfo("clientLoginId") + ": " + message);
+    }
+  }
+
+  private void loginClientMessage(String command, ConnectionToClient client) {
+
+    // Splits (#login and clientLoginId) to different strings to set client info
+    String[] parts = command.split(" ");
+
+    if (parts.length >= 2) {
+
+      // Assigns 2nd split of the string to be the clientLoginId
+      String clientLoginId = parts[1];
+
+      // Set the client's login ID in their connection information
+      client.setInfo("clientLoginId", clientLoginId);
+      client.setInfo("clientLoginId", clientLoginId);
+      System.out.println("Message received: " + command + " from null");
+      System.out.println(clientLoginId + " has logged on.");
+    }
+
   }
 
   /**
@@ -86,8 +118,17 @@ public class EchoServer extends AbstractServer {
     int port = 0; // Port to listen on
 
     try {
-      port = Integer.parseInt(args[0]); // Get port from command line
+      if (args.length > 0) {
+        System.out.println("IF STATEMENT");
+        port = Integer.parseInt(args[0]); // Get port from command line
+
+      } else {
+        port = DEFAULT_PORT; // Set port to 5555
+        System.out.println("ELSE STATEMENT");
+      }
+
     } catch (Throwable t) {
+      System.out.println("CATCH STATEMENT");
       port = DEFAULT_PORT; // Set port to 5555
     }
 
@@ -108,7 +149,8 @@ public class EchoServer extends AbstractServer {
    */
   @Override
   protected void clientConnected(ConnectionToClient client) {
-    System.out.println("Client is successfully connected");
+    System.out.println("A new client has connected to the server.");
+
   }
 
   /**
@@ -121,7 +163,8 @@ public class EchoServer extends AbstractServer {
   @Override
   synchronized protected void clientDisconnected(
       ConnectionToClient client) {
-    System.out.println("Client is successfully disconnected");
+
+    System.out.println("Client " + client.getInfo("clientLoginId") + " is disconnected.");
   }
 
   public void setServerConsole(ServerConsole serverConsole) {

@@ -21,6 +21,7 @@ import edu.seg2105.client.common.*;
 public class ChatClient extends AbstractClient {
   // Instance variables **********************************************
   private String clientLoginId;
+  private boolean sentLoginCommand = false;
 
   /**
    * The interface type variable. It allows the implementation of
@@ -56,8 +57,19 @@ public class ChatClient extends AbstractClient {
    * @param msg The message from the server.
    */
   public void handleMessageFromServer(Object msg) {
-    clientUI.display(msg.toString());
+    String message = msg.toString();
 
+    if (message.startsWith("#login")) {
+      String[] parts = message.split(" ");
+
+      if (parts.length >= 2) {
+        String clientLoginId = parts[1];
+        clientUI.display(clientLoginId + " has logged on");
+
+      }
+    } else {
+      clientUI.display(msg.toString());
+    }
   }
 
   /**
@@ -66,11 +78,31 @@ public class ChatClient extends AbstractClient {
    * @param message The message from the UI.
    */
   public void handleMessageFromClientUI(String message) {
-    try {
-      sendToServer(message);
-    } catch (IOException e) {
-      clientUI.display("Could not send message to server.  Terminating client.");
-      quit();
+
+    if (message.startsWith("#login")) {
+      if (!sentLoginCommand) {
+        sentLoginCommand = true;
+
+        try {
+          sendToServer(message);
+        } catch (IOException e) {
+          clientUI.display("Could not send message to server. Terminating client.");
+          quit();
+        }
+
+      } else {
+        clientUI.display("ERROR: #login is not able to send more than once after connecting.");
+        quit();
+      }
+
+    } else {
+
+      try {
+        sendToServer(message);
+      } catch (IOException e) {
+        clientUI.display("Could not send message to server. Terminating client.");
+        quit();
+      }
     }
   }
 
@@ -96,7 +128,7 @@ public class ChatClient extends AbstractClient {
    */
   @Override
   protected void connectionException(Exception exception) {
-    clientUI.display("The server is shut down");
+    clientUI.display("The server has shut down");
 
     // Quit system
     System.exit(0);
@@ -115,7 +147,6 @@ public class ChatClient extends AbstractClient {
   protected void connectionClosed() {
     clientUI.display("Connection closed");
   }
-
 }
 
 // End of ChatClient class

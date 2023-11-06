@@ -54,14 +54,11 @@ public class ServerConsole implements ChatIF {
 
             // Handle stop command
         } else if (command.startsWith("#stop")) {
-            display("Server will stop listening for new clients");
-            server.sendToAllClients("SERVER MSG> Server will stop listening for new clients");
+
             server.stopListening();
 
             // Handle close command
         } else if (command.startsWith("#close")) {
-            display("Server will close. All clients will be disconnected");
-            server.sendToAllClients("SERVER MSG> Server will close. All clients will be disconnected");
             server.stopListening();
             server.disconnectAllClients();
 
@@ -92,8 +89,6 @@ public class ServerConsole implements ChatIF {
                 try {
                     server.listen();
 
-                    display("Server will now listen for new clients");
-                    server.sendToAllClients("SERVER MSG> Server will now listen for new clients");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -119,7 +114,16 @@ public class ServerConsole implements ChatIF {
 
     public static void main(String[] args) {
         // Initialize and set Echoserver instance with default port
-        EchoServer echoServer = new EchoServer(EchoServer.DEFAULT_PORT);
+        int port = EchoServer.DEFAULT_PORT;
+
+        if (args.length > 0) {
+            try {
+                port = Integer.parseInt(args[0]); // Read port from command line argument
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid port number");
+            }
+        }
+        EchoServer echoServer = new EchoServer(port);
         ServerConsole serverConsole = new ServerConsole(echoServer);
         echoServer.setServerConsole(serverConsole);
 

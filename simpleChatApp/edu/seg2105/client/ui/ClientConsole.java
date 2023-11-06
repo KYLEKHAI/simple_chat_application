@@ -104,7 +104,7 @@ public class ClientConsole implements ChatIF {
 
     if (command.startsWith("#quit")) {
       // Handle quit command
-      System.out.println(client + " requested to quit");
+      System.out.println(clientLoginId + " requested to quit");
 
       try {
         client.closeConnection();
@@ -118,20 +118,28 @@ public class ClientConsole implements ChatIF {
     } else if (command.startsWith("#logoff")) {
 
       // Handle logoff command
-      System.out.println(client + " requested to log off");
+      System.out.println(clientLoginId + " requested to log off");
 
-      try {
-        client.closeConnection();
-        System.out.println(client + " is now logged off");
-      } catch (IOException e) {
-        e.printStackTrace();
+      if (client.isConnected()) {
 
+        try {
+          client.closeConnection();
+          System.out.println(clientLoginId + " is now logged off");
+        } catch (
+
+        IOException e) {
+          e.printStackTrace();
+        }
+      }
+
+      else {
+        System.out.println(clientLoginId + " is already logged off");
       }
 
     } else if (command.startsWith("#sethost")) {
 
       // Handle sethost command
-      System.out.println(client + " requested to set host");
+      System.out.println(clientLoginId + " requested to set host");
 
       if (!client.isConnected()) {
 
@@ -155,7 +163,7 @@ public class ClientConsole implements ChatIF {
     } else if (command.startsWith("#setport")) {
 
       // Handle setport command
-      System.out.println(client + " requested to set host");
+      System.out.println(clientLoginId + " requested to set host");
 
       if (!client.isConnected()) {
 
@@ -178,15 +186,16 @@ public class ClientConsole implements ChatIF {
 
       // ERROR TO BE FIXED: LOGIN DOESNT ALLOW FOR RE-LOGGIN IN WITH NEW HOST/PORT
       // (also use getInet() to validate)
+
     } else if (command.startsWith("#login")) {
       // Handle login command
-      System.out.println(client + " requested to log in");
+      System.out.println(clientLoginId + " requested to log in");
 
       if (!client.isConnected()) {
 
         try {
           client.openConnection();
-          System.out.println(client + " is now logged in");
+          System.out.println(clientLoginId + " is now logged in");
         } catch (
 
         IOException e) {
@@ -194,19 +203,19 @@ public class ClientConsole implements ChatIF {
         }
 
       } else {
-        System.out.println(client + " is already logged in");
+        System.out.println(clientLoginId + " is already logged in");
       }
 
     } else if (command.startsWith("#gethost")) {
 
       // Handle gethost command
-      System.out.println(client + " requested to get host");
+      System.out.println(clientLoginId + " requested to get host");
       System.out.println("Current host: " + client.getHost());
 
     } else if (command.startsWith("#getport")) {
 
       // Handle getport command
-      System.out.println(client + " requested to get port");
+      System.out.println(clientLoginId + " requested to get port");
       System.out.println("Current port: " + client.getPort());
     }
 
@@ -238,7 +247,7 @@ public class ClientConsole implements ChatIF {
 
     // Tells user they have to set a login id
     if (args.length < 1) {
-      System.out.println("All clients must set a login_id = args[0] (optional: host = args[1], port = args[2])");
+      System.out.println("ERROR - No login ID specified.  Connection aborted.");
       System.exit(1);
     }
 
@@ -251,12 +260,22 @@ public class ClientConsole implements ChatIF {
       port = Integer.parseInt(args[2]);
 
     } catch (ArrayIndexOutOfBoundsException e) {
+
       host = "localhost";
       port = DEFAULT_PORT;
     }
 
-    ClientConsole chat = new ClientConsole(clientLoginId, host, DEFAULT_PORT);
-    chat.accept(); // Wait for console data
+    ClientConsole chat = new ClientConsole(clientLoginId, host, port);
+
+    // If loginid is provided but server is not started yet, print error message
+    if (!chat.client.isConnected()) {
+      System.out.println("ERROR - Can't setup connection! Terminating client.");
+      System.exit(1);
+
+    } else {
+      chat.accept(); // Wait for console data
+    }
   }
 }
+
 // End of ConsoleChat class
