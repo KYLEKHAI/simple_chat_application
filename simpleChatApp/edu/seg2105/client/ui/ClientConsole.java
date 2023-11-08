@@ -201,6 +201,7 @@ public class ClientConsole implements ChatIF {
 
       } else {
         System.out.println(clientLoginId + " is already logged in");
+        client.handleMessageFromClientUI("#login " + clientLoginId);
       }
 
     } else if (command.startsWith("#gethost")) {

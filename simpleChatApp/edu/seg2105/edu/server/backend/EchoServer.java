@@ -59,6 +59,7 @@ public class EchoServer extends AbstractServer {
 
     // If message starts with #login then call the loginClientMessage method
     if (message.startsWith("#login")) {
+
       loginClientMessage(message, client);
 
     } else {
@@ -85,6 +86,7 @@ public class EchoServer extends AbstractServer {
       client.setInfo("clientLoginId", clientLoginId);
       System.out.println("Message received: " + command + " from null");
       System.out.println(clientLoginId + " has logged on.");
+
     }
 
   }
